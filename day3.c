@@ -3,8 +3,9 @@
 
 void main(){
     FILE *fp = fopen("day3input.txt","r");
-    int tens,ones=0,i,j,len,max,jolt,sum=0;
-    char strin[100];
+    int tens,ones=0,i,j,len,max,lastind,start,end,maxi;
+    long long sum=0,lineval;
+    char strin[100],maxd;
     if(fp==NULL){
         printf("File is invalid");
         return;
@@ -12,19 +13,30 @@ void main(){
 
     while(fscanf(fp,"%s",&strin)==1){
         len=strlen(strin);
-        max=-1;
-        for(i=0;i<len;i++){
-            for(j=i+1;j<len;j++){
-                ones=strin[j]-'0';
-                tens=strin[i]-'0';
-                jolt=(tens*10)+ones;
-                if(jolt>max){
-                    max=jolt;
+        lineval=0;
+        lastind=-1;
+        for(i=12;i>0;i--){
+            start=lastind+1;
+            end=len-i;
+            maxd=-1;
+            maxi=-1;
+            for(j=start;j<=end;j++){
+                if(strin[j]=='9'){
+                    maxd='9';
+                    maxi=j;
+                    break;
+                }
+                if(strin[j]>maxd){
+                    maxd=strin[j];
+                    maxi=j;            
                 }
             }
+            lineval=(lineval*10)+(maxd-'0');
+            lastind=maxi;
         }
-        sum+=max;
+        sum+=lineval;
+        
     }
-    printf("The sum is %d",sum);
+    printf("The sum is %lld",sum);
     fclose(fp);
 }
