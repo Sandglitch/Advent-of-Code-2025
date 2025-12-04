@@ -8,121 +8,54 @@ void main(){
         printf("File was not loaded");
         exit(0);
     }
-    int rollnum=0,i,j,valroll=0;
     char input[200][200];
-    int row=0;
-    while(fscanf(fp,"%s",input[row])==1){
+    char temp[200][200];
+    int row = 0;
+    long long total_removed = 0;
+    int removed_this_round;
+    int i, j, r, dr, dc, ni, nj, neighbors;
+
+    while (fscanf(fp, "%s", input[row]) == 1) {
         row++;
     }
-    int col=strlen(input[0]);
-    for(i=0;i<row;i++){
-        for(j=0;j<col;j++){
-            if(input[i][j]=='@'){
-                rollnum=0;
-                if((i==0 && j==0)||(i==0 && j==col-1)||(i==(row-1) && j==(col-1))||(i==(row-1) && j==0)){
-                   rollnum++;
-                }
-                else if(i==0){
-                    if(input[i][j-1]=='@'){
-                        rollnum++;
+    int col = strlen(input[0]);
+
+    do {
+        removed_this_round = 0;
+
+        for (r = 0; r < row; r++) {
+            strcpy(temp[r], input[r]);
+        }
+
+        for (i = 0; i < row; i++) {
+            for (j = 0; j < col; j++) {
+                if (temp[i][j] == '@') {
+                    neighbors = 0;
+                    for (dr = -1; dr <= 1; dr++) {
+                        for (dc = -1; dc <= 1; dc++) {
+                            if (dr == 0 && dc == 0) continue;
+
+                            ni = i + dr;
+                            nj = j + dc;
+
+                            if (ni >= 0 && ni < row && nj >= 0 && nj < col) {
+                                if (temp[ni][nj] == '@') {
+                                    neighbors++;
+                                }
+                            }
+                        }
                     }
-                    if(input[i][j+1]=='@'){
-                        rollnum++;
+
+                    if (neighbors < 4) {
+                        input[i][j] = '.';
+                        removed_this_round++;
+                        total_removed++;
                     }
-                    if(input[i+1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j+1]=='@'){
-                        rollnum++;
-                    }
-                }
-                else if(j==(col-1)){
-                    if(input[i-1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j]=='@'){
-                        rollnum++;
-                    }
-                }
-                else if(i==(row-1)){
-                    if(input[i-1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j+1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j+1]=='@'){
-                        rollnum++;
-                    }
-                }
-                else if(j==0){
-                    if(input[i-1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j+1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j+1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j+1]=='@'){
-                        rollnum++;
-                    }
-                }
-                else{
-                    if(input[i-1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i-1][j+1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i][j+1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j-1]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j]=='@'){
-                        rollnum++;
-                    }
-                    if(input[i+1][j+1]=='@'){
-                        rollnum++;
-                    }
-                
-                }
-                if(rollnum<4){
-                    valroll++;
                 }
             }
         }
-    }
-    printf("%d",valroll);
+    } while (removed_this_round > 0);
+
+    printf("%lld", total_removed);
     fclose(fp);
 }
