@@ -11,7 +11,7 @@ int main() {
     FILE *fp = fopen("day5input.txt", "r");
     if (fp == NULL) return 1;
 
-    struct Range ranges[5000];
+    struct Range ranges[5000]; 
     int count = 0;
     char line[100];
 
