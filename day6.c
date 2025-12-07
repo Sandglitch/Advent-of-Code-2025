@@ -22,7 +22,6 @@ int is_col_empty(int c) {
 int main() {
     FILE *fp = fopen("day6input.txt", "r");
     if (fp == NULL) return 1;
-
     for (int r = 0; r < MAX_ROWS; r++) {
         for (int c = 0; c < MAX_COLS; c++) {
             grid[r][c] = ' ';
@@ -33,9 +32,7 @@ int main() {
     while (fgets(lineBuffer, MAX_COLS, fp)) {
         int len = strlen(lineBuffer);
         if (lineBuffer[len - 1] == '\n') lineBuffer[--len] = '\0';
-
         if (len > cols) cols = len;
-
         for (int c = 0; c < len; c++) {
             grid[rows][c] = lineBuffer[c];
         }
@@ -57,25 +54,26 @@ int main() {
         int num_count = 0;
         char operator = '?';
 
-        for (int r = 0; r < rows; r++) {
-            char rowText[100] = {0};
-            int idx = 0;
+        for (int k = start_col; k <= end_col; k++) {
+            for (int r = 0; r < rows; r++) {
+                if (grid[r][k] == '+') operator = '+';
+                else if (grid[r][k] == '*') operator = '*';
+            }
+        }
 
-            for (int k = start_col; k <= end_col; k++) {
-                rowText[idx++] = grid[r][k];
+        for (int k = start_col; k <= end_col; k++) {
+            long long current_val = 0;
+            int has_digit = 0;
+
+            for (int r = 0; r < rows; r++) {
+                if (isdigit(grid[r][k])) {
+                    current_val = (current_val * 10) + (grid[r][k] - '0');
+                    has_digit = 1;
+                }
             }
 
-            if (strchr(rowText, '+')) operator = '+';
-            else if (strchr(rowText, '*')) operator = '*';
-            else {
-                int has_digit = 0;
-                for (int i = 0; i < strlen(rowText); i++) {
-                    if (isdigit(rowText[i])) has_digit = 1;
-                }
-
-                if (has_digit) {
-                    numbers[num_count++] = atoll(rowText);
-                }
+            if (has_digit) {
+                numbers[num_count++] = current_val;
             }
         }
 
